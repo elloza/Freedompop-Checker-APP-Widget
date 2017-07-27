@@ -2,7 +2,8 @@ package com.lozasolutions.fredompop
 
 import com.lozasolutions.fredompop.common.TestDataFactory
 import com.lozasolutions.fredompop.data.DataManager
-import com.lozasolutions.fredompop.features.main.MainMvpView
+import com.lozasolutions.fredompop.data.local.PreferencesHelper
+import com.lozasolutions.fredompop.features.main.LoginMvpView
 import com.lozasolutions.fredompop.features.main.MainPresenter
 import com.lozasolutions.fredompop.util.RxSchedulersOverrideRule
 import io.reactivex.Single
@@ -23,8 +24,9 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class MainPresenterTest {
 
-    @Mock lateinit var mMockMainMvpView: MainMvpView
+    @Mock lateinit var mMockMainMvpView: LoginMvpView
     @Mock lateinit var mMockDataManager: DataManager
+    @Mock lateinit var mMockSharedPreferences: PreferencesHelper
     private var mMainPresenter: MainPresenter? = null
 
     @JvmField
@@ -33,7 +35,7 @@ class MainPresenterTest {
 
     @Before
     fun setUp() {
-        mMainPresenter = MainPresenter(mMockDataManager)
+        mMainPresenter = MainPresenter(mMockDataManager,mMockSharedPreferences)
         mMainPresenter?.attachView(mMockMainMvpView)
     }
 
@@ -51,9 +53,9 @@ class MainPresenterTest {
 
         mMainPresenter?.getPokemon(10)
 
-        verify<MainMvpView>(mMockMainMvpView, times(2)).showProgress(anyBoolean())
-        verify<MainMvpView>(mMockMainMvpView).showPokemon(pokemonList)
-        verify<MainMvpView>(mMockMainMvpView, never()).showError(RuntimeException())
+        verify<LoginMvpView>(mMockMainMvpView, times(2)).showProgress(anyBoolean())
+        verify<LoginMvpView>(mMockMainMvpView).showPokemon(pokemonList)
+        verify<LoginMvpView>(mMockMainMvpView, never()).showError(RuntimeException())
 
     }
 
@@ -65,9 +67,9 @@ class MainPresenterTest {
 
         mMainPresenter?.getPokemon(10)
 
-        verify<MainMvpView>(mMockMainMvpView, times(2)).showProgress(anyBoolean())
-//        verify<MainMvpView>(mMockMainMvpView).showError(RuntimeException())
-        verify<MainMvpView>(mMockMainMvpView, never()).showPokemon(ArgumentMatchers.anyList<String>())
+        verify<LoginMvpView>(mMockMainMvpView, times(2)).showProgress(anyBoolean())
+//        verify<LoginMvpView>(mMockMainMvpView).showError(RuntimeException())
+        verify<LoginMvpView>(mMockMainMvpView, never()).showPokemon(ArgumentMatchers.anyList<String>())
     }
 
 }

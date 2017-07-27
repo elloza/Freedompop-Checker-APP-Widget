@@ -1,17 +1,16 @@
-package com.lozasolutions.fredompop.features.main
+package com.lozasolutions.fredompop.features.login
 
 import com.lozasolutions.fredompop.data.DataManager
-import com.lozasolutions.fredompop.data.local.PreferencesHelper
 import com.lozasolutions.fredompop.features.base.BasePresenter
 import com.lozasolutions.fredompop.injection.ConfigPersistent
 import com.lozasolutions.fredompop.util.rx.scheduler.SchedulerUtils
 import javax.inject.Inject
 
 @ConfigPersistent
-class MainPresenter @Inject
-constructor(private val mDataManager: DataManager, private val preferencesHelper: PreferencesHelper) : BasePresenter<MainMvpView>() {
+class LoginPresenter @Inject
+constructor(private val mDataManager: DataManager) : BasePresenter<LoginMvpView>() {
 
-    override fun attachView(mvpView: MainMvpView) {
+    override fun attachView(mvpView: LoginMvpView) {
         super.attachView(mvpView)
     }
 
@@ -22,15 +21,10 @@ constructor(private val mDataManager: DataManager, private val preferencesHelper
                 .compose(SchedulerUtils.ioToMain<List<String>>())
                 .subscribe({ pokemons ->
                     mvpView?.showProgress(false)
-                    mvpView?.showPokemon(pokemons)
                 }) { throwable ->
                     mvpView?.showProgress(false)
                     mvpView?.showError(throwable)
                 }
-    }
-
-    fun isTokenAvailable(): Boolean {
-        return preferencesHelper.isTokenAvailable()
     }
 
 }

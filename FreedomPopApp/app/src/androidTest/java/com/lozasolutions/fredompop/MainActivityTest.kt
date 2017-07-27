@@ -3,7 +3,7 @@ package com.lozasolutions.fredompop
 import com.lozasolutions.fredompop.common.TestComponentRule
 import com.lozasolutions.fredompop.common.TestDataFactory
 import com.lozasolutions.fredompop.data.model.Pokemon
-import com.lozasolutions.fredompop.features.main.MainActivity
+import com.lozasolutions.fredompop.features.main.LoginActivity
 import com.lozasolutions.fredompop.util.ErrorTestUtil
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
@@ -25,7 +25,7 @@ import org.mockito.Mockito.`when`
 class MainActivityTest {
 
     private val mComponent = TestComponentRule(InstrumentationRegistry.getTargetContext())
-    private val mMain = ActivityTestRule(MainActivity::class.java, false, false)
+    private val mMain = ActivityTestRule(LoginActivity::class.java, false, false)
 
     // TestComponentRule needs to go first to make sure the Dagger ApplicationTestComponent is set
     // in the Application before any Activity is launched.

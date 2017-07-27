@@ -1,26 +1,25 @@
-package com.lozasolutions.fredompop.features.main
+package com.lozasolutions.fredompop.features.login
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Toast
 import butterknife.BindView
 import com.lozasolutions.fredompop.R
 import com.lozasolutions.fredompop.features.base.BaseActivity
 import com.lozasolutions.fredompop.features.common.ErrorView
-import com.lozasolutions.fredompop.features.detail.DetailActivity
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : BaseActivity(), MainMvpView, PokemonAdapter.ClickListener, ErrorView.ErrorListener {
+class LoginActivity : BaseActivity(), LoginMvpView, ErrorView.ErrorListener {
 
-    @Inject lateinit var mPokemonAdapter: PokemonAdapter
-    @Inject lateinit var mMainPresenter: MainPresenter
+
+    @Inject lateinit var mMainPresenter: LoginPresenter
 
     @BindView(R.id.view_error) @JvmField var mErrorView: ErrorView? = null
     @BindView(R.id.progress) @JvmField var mProgress: ProgressBar? = null
@@ -39,14 +38,9 @@ class MainActivity : BaseActivity(), MainMvpView, PokemonAdapter.ClickListener, 
         mSwipeRefreshLayout?.setColorSchemeResources(R.color.white)
         mSwipeRefreshLayout?.setOnRefreshListener { mMainPresenter.getPokemon(POKEMON_COUNT) }
 
-        mPokemonAdapter.setClickListener(this)
-        mPokemonRecycler?.layoutManager = LinearLayoutManager(this)
-        mPokemonRecycler?.adapter = mPokemonAdapter
-
         mErrorView?.setErrorListener(this)
 
         mMainPresenter.getPokemon(POKEMON_COUNT)
-        mMainPresenter.isTokenAvailable();
     }
 
     override val layout: Int
@@ -57,30 +51,8 @@ class MainActivity : BaseActivity(), MainMvpView, PokemonAdapter.ClickListener, 
         mMainPresenter.detachView()
     }
 
-    override fun showPokemon(pokemon: List<String>) {
-        mPokemonAdapter.setPokemon(pokemon)
-        mPokemonAdapter.notifyDataSetChanged()
-
-        mPokemonRecycler?.visibility = View.VISIBLE
-        mSwipeRefreshLayout?.visibility = View.VISIBLE
-    }
-
     override fun showProgress(show: Boolean) {
-        if (show) {
-            if (mPokemonRecycler?.visibility == View.VISIBLE && mPokemonAdapter.itemCount > 0) {
-                mSwipeRefreshLayout?.isRefreshing = true
-            } else {
-                mProgress?.visibility = View.VISIBLE
-
-                mPokemonRecycler?.visibility = View.GONE
-                mSwipeRefreshLayout?.visibility = View.GONE
-            }
-
-            mErrorView?.visibility = View.GONE
-        } else {
-            mSwipeRefreshLayout?.isRefreshing = false
-            mProgress?.visibility = View.GONE
-        }
+        Toast.makeText(applicationContext,"Progress",Toast.LENGTH_LONG).show()
     }
 
     override fun showError(error: Throwable) {
@@ -90,9 +62,6 @@ class MainActivity : BaseActivity(), MainMvpView, PokemonAdapter.ClickListener, 
         Timber.e(error, "There was an error retrieving the pokemon")
     }
 
-    override fun onPokemonClick(pokemon: String) {
-        startActivity(DetailActivity.getStartIntent(this, pokemon))
-    }
 
     override fun onReloadData() {
         mMainPresenter.getPokemon(POKEMON_COUNT)
@@ -103,7 +72,7 @@ class MainActivity : BaseActivity(), MainMvpView, PokemonAdapter.ClickListener, 
         private val POKEMON_COUNT = 20
 
         fun getStartIntent(context: Context): Intent {
-            val intent = Intent(context, MainActivity::class.java)
+            val intent = Intent(context, LoginActivity::class.java)
             return intent
         }
     }

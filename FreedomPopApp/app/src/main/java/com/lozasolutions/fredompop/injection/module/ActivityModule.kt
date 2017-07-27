@@ -2,10 +2,9 @@ package com.lozasolutions.fredompop.injection.module
 
 import android.app.Activity
 import android.content.Context
-
+import com.lozasolutions.fredompop.injection.ActivityContext
 import dagger.Module
 import dagger.Provides
-import com.lozasolutions.fredompop.injection.ActivityContext
 
 @Module
 class ActivityModule(private val mActivity: Activity) {

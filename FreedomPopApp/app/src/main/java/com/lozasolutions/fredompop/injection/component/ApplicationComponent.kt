@@ -1,11 +1,12 @@
 package com.lozasolutions.fredompop.injection.component
 
+import android.app.Application
+import android.content.Context
 import com.lozasolutions.fredompop.data.DataManager
+import com.lozasolutions.fredompop.data.local.PreferencesHelper
 import com.lozasolutions.fredompop.data.remote.MvpStarterService
 import com.lozasolutions.fredompop.injection.ApplicationContext
 import com.lozasolutions.fredompop.injection.module.ApplicationModule
-import android.app.Application
-import android.content.Context
 import dagger.Component
 import javax.inject.Singleton
 
@@ -21,4 +22,6 @@ interface ApplicationComponent {
     fun dataManager(): DataManager
 
     fun mvpBoilerplateService(): MvpStarterService
+
+    fun preferenceHelper():PreferencesHelper
 }
