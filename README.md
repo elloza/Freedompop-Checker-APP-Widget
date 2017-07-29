@@ -9,10 +9,10 @@ Disclaimer:
 
 ### TODO List
 
-- [ ] Configure project structure and branchs. (Dependency Injection, Libraries, MVP, Simple Anroid test, Simple Unit test...)
+- [X] Configure project structure and branchs. (Dependency Injection, Libraries, MVP, Simple Anroid test, Simple Unit test...)
 - [ ] Rewrite Python API to Retrofit 2 API (Basic authentication interecepter included)
 - [ ] Tests Retrofit API
-- [ ] Login Screen (test for sucess and fail cases)
+- [X] Login Screen (test for sucess and fail cases)
 - [ ] Main Screen (Show detailed consumption, time until next reset, button for refresh, slider for alert, time selector for periodical updates)
 - [ ] Android jobs for periodically update the current consumption
 - [ ] Local notification Manager for notify excess in the consumption
