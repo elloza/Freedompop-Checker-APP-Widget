@@ -1,7 +1,5 @@
 package com.lozasolutions.fredompop.common.injection.module
 
-import com.lozasolutions.fredompop.data.DataManager
-import com.lozasolutions.fredompop.data.remote.MvpStarterService
 import com.lozasolutions.fredompop.injection.ApplicationContext
 import android.app.Application
 import android.content.Context

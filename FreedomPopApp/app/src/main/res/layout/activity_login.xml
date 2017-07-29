@@ -1,46 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/logoFreedompop"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/freedompop_logo_description"
+        android:src="@drawable/freedompop_logo_big"
+        app:layout_constraintEnd_toEndOf="@+id/passwordTextLayout"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintStart_toStartOf="@+id/passwordTextLayout"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/progress" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/usernameTextLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/primary"
+        app:layout_constraintStart_toStartOf="@+id/passwordTextLayout"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/passwordTextLayout"
+        app:layout_constraintEnd_toEndOf="@+id/passwordTextLayout">
+
+        <EditText
+            android:id="@+id/username"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:theme="@style/AppTheme.ToolbarStyle" />
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/primary"
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/user_icon"
+            android:hint="@string/username"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/primary"
+            android:textColorHint="@color/primary"
+            android:textSize="20sp" />
 
-    </android.support.design.widget.AppBarLayout>
+    </android.support.design.widget.TextInputLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_to_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/passwordTextLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/primary"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        app:passwordToggleContentDescription=""
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/primary"
+        app:layout_constraintBottom_toTopOf="@+id/loginButton">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_pokemon"
+        <EditText
+            android:id="@+id/password"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/primary"
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/lock_icon"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textColor="@color/primary"
+            android:textColorHint="@color/primary"
+            android:textSize="20sp" />
+    </android.support.design.widget.TextInputLayout>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
 
-    <com.lozasolutions.fredompop.features.common.ErrorView
-        android:id="@+id/view_error"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+    <Button
+
+        android:id="@+id/loginButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:text="@string/log_in"
+        android:textColor="@color/white"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/passwordTextLayout"
+        android:layout_marginStart="0dp"
+        app:layout_constraintEnd_toEndOf="@+id/passwordTextLayout"
+        android:layout_marginEnd="0dp" />
 
     <ProgressBar
+        android:visibility="invisible"
         android:id="@+id/progress"
-        android:layout_width="wrap_content"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:indeterminate="true"
+        android:indeterminateBehavior="cycle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
+        app:layout_constraintStart_toStartOf="@+id/usernameTextLayout"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/usernameTextLayout"
+        app:layout_constraintEnd_toEndOf="@+id/usernameTextLayout"
+        android:layout_marginEnd="8dp" />
 
-</android.support.design.widget.CoordinatorLayout>
+</android.support.constraint.ConstraintLayout>

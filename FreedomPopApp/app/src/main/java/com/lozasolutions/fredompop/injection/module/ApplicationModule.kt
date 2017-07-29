@@ -2,14 +2,16 @@ package com.lozasolutions.fredompop.injection.module
 
 import android.app.Application
 import android.content.Context
-
-import javax.inject.Singleton
-
+import com.lozasolutions.fredompop.data.local.PreferencesHelper
+import com.lozasolutions.fredompop.data.local.SessionManager
+import com.lozasolutions.fredompop.data.remote.FreedompopAPI
+import com.lozasolutions.fredompop.data.remote.retrofit.FreedompopAPIRetrofit
+import com.lozasolutions.fredompop.data.remote.retrofit.FreedompopAPIService
+import com.lozasolutions.fredompop.data.remote.retrofit.FreedompopServiceFactory
+import com.lozasolutions.fredompop.injection.ApplicationContext
 import dagger.Module
 import dagger.Provides
-import com.lozasolutions.fredompop.data.remote.MvpStarterService
-import com.lozasolutions.fredompop.data.remote.MvpStarterServiceFactory
-import com.lozasolutions.fredompop.injection.ApplicationContext
+import javax.inject.Singleton
 
 @Module
 class ApplicationModule(private val mApplication: Application) {
@@ -25,9 +27,23 @@ class ApplicationModule(private val mApplication: Application) {
         return mApplication
     }
 
+
     @Provides
     @Singleton
-    internal fun provideMvpStarterService(): MvpStarterService {
-        return MvpStarterServiceFactory.makeStarterService()
+    internal fun provideFreedompopAPIService(): FreedompopAPIService {
+        return FreedompopServiceFactory.makeFreedompopService()
+    }
+
+
+    @Provides
+    @Singleton
+    internal fun sessionManager(@ApplicationContext context:Context): SessionManager {
+        return PreferencesHelper(context)
+    }
+
+    @Provides
+    @Singleton
+    internal fun provideFreedomPopAPI(service : FreedompopAPIService, sessionManager: SessionManager): FreedompopAPI {
+        return FreedompopAPIRetrofit(service,sessionManager)
     }
 }

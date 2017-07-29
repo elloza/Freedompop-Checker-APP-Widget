@@ -2,9 +2,8 @@ package com.lozasolutions.fredompop.injection.component
 
 import android.app.Application
 import android.content.Context
-import com.lozasolutions.fredompop.data.DataManager
-import com.lozasolutions.fredompop.data.local.PreferencesHelper
-import com.lozasolutions.fredompop.data.remote.MvpStarterService
+import com.lozasolutions.fredompop.data.local.SessionManager
+import com.lozasolutions.fredompop.data.remote.FreedompopAPI
 import com.lozasolutions.fredompop.injection.ApplicationContext
 import com.lozasolutions.fredompop.injection.module.ApplicationModule
 import dagger.Component
@@ -19,9 +18,7 @@ interface ApplicationComponent {
 
     fun application(): Application
 
-    fun dataManager(): DataManager
+    fun freedompopAPI(): FreedompopAPI
 
-    fun mvpBoilerplateService(): MvpStarterService
-
-    fun preferenceHelper():PreferencesHelper
+    fun sessionManager():SessionManager
 }

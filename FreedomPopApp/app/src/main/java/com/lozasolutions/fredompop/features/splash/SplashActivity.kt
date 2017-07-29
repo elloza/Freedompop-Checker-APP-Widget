@@ -17,13 +17,13 @@ class SplashActivity : BaseActivity(), SplashMvpView {
         activityComponent().inject(this)
         splashPresenter.attachView(this)
 
-
-        Thread.sleep(2000)
         if(splashPresenter.isTokenAvailable()){
             startActivity(MainActivity.getStartIntent(this))
+
         }else{
             startActivity(LoginActivity.getStartIntent(this))
         }
+        finish()
 
 
     }

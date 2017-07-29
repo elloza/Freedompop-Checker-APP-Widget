@@ -1,3 +1,7 @@
 package com.lozasolutions.fredompop.data.model
 
-data class LoginResponse(val id: String, val name: String, val sprites: Sprites, val stats: List<Statistic>)
+import com.google.gson.annotations.SerializedName
+
+data class LoginResponse(@SerializedName("email")val email: String, @SerializedName("access_token") val access_token: String,
+                         @SerializedName("token_type") val token_type: String, @SerializedName("expires_in") val expires_in: Int,
+                         @SerializedName("refresh_token") val refresh_token: String)

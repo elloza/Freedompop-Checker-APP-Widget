@@ -8,4 +8,6 @@ interface LoginMvpView : MvpView {
 
     fun showError(error: Throwable)
 
+    fun showMainScreen()
+
 }

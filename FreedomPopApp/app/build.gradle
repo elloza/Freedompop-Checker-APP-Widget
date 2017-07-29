@@ -26,8 +26,8 @@ android {
         // Major -> Millions, Minor -> Thousands, Bugfix -> Hundreds. E.g 1.3.72 == 1,003,072
         versionName '0.1.0'
 
-        buildConfigField("String", "POKEAPI_API_URL",
-                "\"${PokeapiApiUrl}\"")
+        buildConfigField("String", "FREEDOMPOP_API_URL",
+                "\"${FreedompopApiURL}\"")
 
         multiDexEnabled true
     }
@@ -107,6 +107,10 @@ dependencies {
     implementation('com.github.bumptech.glide:okhttp3-integration:1.4.0') {
         exclude group: 'glide-parent'
     }
+
+    //Animations
+
+    implementation 'com.github.florent37:viewanimator:1.0.5'
 
     //RxPermission for easy runtime permission management
     implementation 'com.tbruyelle.rxpermissions:rxpermissions:0.9.1@aar'

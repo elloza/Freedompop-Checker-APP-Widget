@@ -1,7 +1,6 @@
 package com.lozasolutions.fredompop
 
 import com.lozasolutions.fredompop.common.TestDataFactory
-import com.lozasolutions.fredompop.data.DataManager
 import com.lozasolutions.fredompop.data.model.Pokemon
 import com.lozasolutions.fredompop.features.detail.DetailMvpView
 import com.lozasolutions.fredompop.features.detail.DetailPresenter

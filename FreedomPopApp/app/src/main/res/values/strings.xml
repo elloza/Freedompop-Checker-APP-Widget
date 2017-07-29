@@ -1,9 +1,12 @@
 <resources>
-    <string name="app_name">MvpStarter</string>
+    <string name="app_name">FPChecker</string>
 
     <string name="dialog_action_ok">OK</string>
     <!--<string name="dialog_action_cancel">Cancel</string>-->
     <string name="dialog_error_title">Sorry</string>
+
+    <string name="error_invalid_password">Invalid password</string>
+    <string name="error_invalid_username">Invalid username</string>
 
     <!-- Detail Activity -->
     <!--<string name="text_pokemon_id">Id: %s</string>-->
@@ -15,4 +18,8 @@
     <string name="error_message">There was a problem loading the pokemon, please try again!</string>
     <string name="error_reload">Reload</string>
     <string name="title_activity_maps_sample">Map</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log In</string>
+    <string name="freedompop_logo_description">Freedompop Logo</string>
 </resources>

@@ -4,7 +4,6 @@ import com.lozasolutions.fredompop.MvpStarterApplication
 import com.lozasolutions.fredompop.common.injection.component.DaggerTestComponent
 import com.lozasolutions.fredompop.common.injection.component.TestComponent
 import com.lozasolutions.fredompop.common.injection.module.ApplicationTestModule
-import com.lozasolutions.fredompop.data.DataManager
 import android.content.Context
 import org.junit.rules.TestRule
 import org.junit.runner.Description

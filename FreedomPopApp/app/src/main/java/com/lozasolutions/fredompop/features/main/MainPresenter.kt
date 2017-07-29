@@ -1,7 +1,8 @@
 package com.lozasolutions.fredompop.features.main
 
-import com.lozasolutions.fredompop.data.DataManager
-import com.lozasolutions.fredompop.data.local.PreferencesHelper
+import com.lozasolutions.fredompop.data.local.SessionManager
+import com.lozasolutions.fredompop.data.model.UsageResponse
+import com.lozasolutions.fredompop.data.remote.FreedompopAPI
 import com.lozasolutions.fredompop.features.base.BasePresenter
 import com.lozasolutions.fredompop.injection.ConfigPersistent
 import com.lozasolutions.fredompop.util.rx.scheduler.SchedulerUtils
@@ -9,7 +10,7 @@ import javax.inject.Inject
 
 @ConfigPersistent
 class MainPresenter @Inject
-constructor(private val mDataManager: DataManager, private val preferencesHelper: PreferencesHelper) : BasePresenter<MainMvpView>() {
+constructor(private val fredompopAPI: FreedompopAPI, private val sessionManager: SessionManager) : BasePresenter<MainMvpView>() {
 
     override fun attachView(mvpView: MainMvpView) {
         super.attachView(mvpView)
@@ -18,11 +19,10 @@ constructor(private val mDataManager: DataManager, private val preferencesHelper
     fun getPokemon(limit: Int) {
         checkViewAttached()
         mvpView?.showProgress(true)
-        mDataManager.getPokemonList(limit)
-                .compose(SchedulerUtils.ioToMain<List<String>>())
-                .subscribe({ pokemons ->
+        fredompopAPI.getUserUsage()
+                .compose(SchedulerUtils.ioToMain<UsageResponse>())
+                .subscribe({ usage ->
                     mvpView?.showProgress(false)
-                    mvpView?.showPokemon(pokemons)
                 }) { throwable ->
                     mvpView?.showProgress(false)
                     mvpView?.showError(throwable)
@@ -30,7 +30,7 @@ constructor(private val mDataManager: DataManager, private val preferencesHelper
     }
 
     fun isTokenAvailable(): Boolean {
-        return preferencesHelper.isTokenAvailable()
+        return sessionManager.isTokenAvailable()
     }
 
 }

@@ -3,68 +3,130 @@ package com.lozasolutions.fredompop.features.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import android.support.constraint.ConstraintLayout
+import android.support.design.widget.Snackbar
+import android.support.design.widget.TextInputLayout
 import android.view.View
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import butterknife.BindView
+import butterknife.OnClick
+import com.github.florent37.viewanimator.ViewAnimator
 import com.lozasolutions.fredompop.R
 import com.lozasolutions.fredompop.features.base.BaseActivity
-import com.lozasolutions.fredompop.features.common.ErrorView
-import timber.log.Timber
+import com.lozasolutions.fredompop.features.main.MainActivity
 import javax.inject.Inject
 
-class LoginActivity : BaseActivity(), LoginMvpView, ErrorView.ErrorListener {
 
 
-    @Inject lateinit var mMainPresenter: LoginPresenter
 
-    @BindView(R.id.view_error) @JvmField var mErrorView: ErrorView? = null
-    @BindView(R.id.progress) @JvmField var mProgress: ProgressBar? = null
-    @BindView(R.id.recycler_pokemon) @JvmField var mPokemonRecycler: RecyclerView? = null
-    @BindView(R.id.swipe_to_refresh) @JvmField var mSwipeRefreshLayout: SwipeRefreshLayout? = null
-    @BindView(R.id.toolbar) @JvmField var mToolbar: Toolbar? = null
+class LoginActivity : BaseActivity(), LoginMvpView {
+
+    @Inject lateinit var loginPresenter: LoginPresenter
+
+    @BindView(R.id.loginButton) @JvmField var loginButton: Button? = null
+    @BindView(R.id.usernameTextLayout) @JvmField var usernameTextLayout: TextInputLayout? = null
+    @BindView(R.id.passwordTextLayout) @JvmField var passwordTextLayout: TextInputLayout? = null
+    @BindView(R.id.username) @JvmField var username: EditText? = null
+    @BindView(R.id.password) @JvmField var password: EditText? = null
+    @BindView(R.id.logoFreedompop) @JvmField var logoFreedompop: ImageView? = null
+    @BindView(R.id.mainLayout) @JvmField var mainLayout: ConstraintLayout? = null
+    @BindView(R.id.progress) @JvmField var progress: ProgressBar? = null
+
+
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent().inject(this)
-        mMainPresenter.attachView(this)
 
-        setSupportActionBar(mToolbar)
+        loginPresenter.attachView(this)
 
-        mSwipeRefreshLayout?.setProgressBackgroundColorSchemeResource(R.color.primary)
-        mSwipeRefreshLayout?.setColorSchemeResources(R.color.white)
-        mSwipeRefreshLayout?.setOnRefreshListener { mMainPresenter.getPokemon(POKEMON_COUNT) }
 
-        mErrorView?.setErrorListener(this)
-
-        mMainPresenter.getPokemon(POKEMON_COUNT)
+        ViewAnimator
+                .animate(logoFreedompop).fadeIn().duration(1000)
+                .andAnimate(usernameTextLayout, passwordTextLayout, loginButton).fadeIn().duration(1000)
+                .andAnimate(usernameTextLayout, passwordTextLayout, loginButton).scale(0.5f, 0.7f, 1f).accelerate().duration(1000)
+                .start();
     }
 
     override val layout: Int
-        get() = R.layout.activity_main
+        get() = R.layout.activity_login
 
     override fun onDestroy() {
         super.onDestroy()
-        mMainPresenter.detachView()
+        loginPresenter.detachView()
+    }
+
+
+    @OnClick(R.id.loginButton)
+    fun onLoginButtonClick(view: View) {
+
+        val usernameText = username?.text.toString()
+        val passwordText = password?.text.toString()
+
+        if (validateData(username = usernameText, password = passwordText))
+            loginPresenter.login(usernameText, passwordText)
+        Toast.makeText(applicationContext, "Loggin...", Toast.LENGTH_LONG).show();
+    }
+
+
+    fun validateData(username: String, password: String): Boolean {
+
+        val validUsername = isValidUsername(username)
+        val validPassword = isValidPassword(password)
+
+        if (!validUsername)
+            errorUsername()
+
+        if (!validPassword)
+            errorPassword()
+
+        return validUsername && validPassword
+    }
+
+    fun errorPassword() {
+        passwordTextLayout?.setError(getString(R.string.error_invalid_password))
+    }
+
+    fun errorUsername() {
+        usernameTextLayout?.setError(getString(R.string.error_invalid_username))
+    }
+
+    fun isValidPassword(password: String): Boolean {
+        return !password.isBlank()
+    }
+
+    fun isValidUsername(username: String): Boolean {
+        return !username.isBlank()
     }
 
     override fun showProgress(show: Boolean) {
-        Toast.makeText(applicationContext,"Progress",Toast.LENGTH_LONG).show()
+
+        if(show){
+            progress?.visibility = View.VISIBLE
+        }else{
+            progress?.visibility =View.INVISIBLE
+        }
+        Toast.makeText(applicationContext, "Progress", Toast.LENGTH_LONG).show()
     }
 
     override fun showError(error: Throwable) {
-        mPokemonRecycler?.visibility = View.GONE
-        mSwipeRefreshLayout?.visibility = View.GONE
-        mErrorView?.visibility = View.VISIBLE
-        Timber.e(error, "There was an error retrieving the pokemon")
+
+        val snackbar = Snackbar.make(findViewById(android.R.id.content), "", Snackbar.LENGTH_LONG)
+                .setAction("Retry") {
+                    val usernameText = username?.text.toString()
+                    val passwordText = password?.text.toString()
+                    loginPresenter.login(usernameText, passwordText)
+                }
+
+        snackbar.show()
     }
 
-
-    override fun onReloadData() {
-        mMainPresenter.getPokemon(POKEMON_COUNT)
+    override fun showMainScreen() {
+        startActivity(MainActivity.getStartIntent(this))
+        finish()
     }
 
     companion object {
