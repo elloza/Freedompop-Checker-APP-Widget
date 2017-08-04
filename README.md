@@ -2,6 +2,9 @@
 ![Logo](https://github.com/elloza/Freedompop-Checker-APP-Widget/blob/master/Images/Freedompop_logo.png)
 
 # Freedompop-Checker-APP-Widget
+[![BuddyBuild](https://dashboard.buddybuild.com/api/statusImage?appID=59847fa3913977000167c227&branch=master&build=latest)](https://dashboard.buddybuild.com/apps/59847fa3913977000167c227/build/latest?branch=master)
+
+
 An application to check the current usage of the freedompop SIM Card. It includes a widget and notifications :)
 
 Disclaimer:
