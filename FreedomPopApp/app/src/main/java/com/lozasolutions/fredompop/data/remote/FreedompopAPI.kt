@@ -1,6 +1,6 @@
 package com.lozasolutions.fredompop.data.remote
 
-import com.lozasolutions.fredompop.data.model.*
+import com.lozasolutions.fredompop.data.remote.model.*
 import io.reactivex.Single
 
 /**
@@ -29,5 +29,6 @@ interface FreedompopAPI {
     fun getContacts(): Single<ContactsResponse>
 
     fun getFriends(): Single<FriendsResponse>
+
 
 }

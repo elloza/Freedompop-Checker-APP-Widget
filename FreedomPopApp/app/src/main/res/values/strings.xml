@@ -8,6 +8,9 @@
     <string name="error_invalid_password">Invalid password</string>
     <string name="error_invalid_username">Invalid username</string>
 
+    <string name="error_login">Error in login</string>
+    <string name="retry">Retry</string>
+
     <!-- Detail Activity -->
     <!--<string name="text_pokemon_id">Id: %s</string>-->
     <!--<string name="text_pokemon_name">Name: %s</string>-->

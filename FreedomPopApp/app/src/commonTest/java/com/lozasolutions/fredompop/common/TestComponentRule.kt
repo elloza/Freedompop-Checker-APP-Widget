@@ -1,6 +1,6 @@
 package com.lozasolutions.fredompop.common
 
-import com.lozasolutions.fredompop.MvpStarterApplication
+import com.lozasolutions.fredompop.FreedompopChecker
 import com.lozasolutions.fredompop.common.injection.component.DaggerTestComponent
 import com.lozasolutions.fredompop.common.injection.component.TestComponent
 import com.lozasolutions.fredompop.common.injection.module.ApplicationTestModule
@@ -21,7 +21,7 @@ class TestComponentRule(val context: Context) : TestRule {
     val testComponent: TestComponent
 
     init {
-        val application = MvpStarterApplication.get(context)
+        val application = FreedompopChecker.get(context)
         testComponent = DaggerTestComponent.builder()
                 .applicationTestModule(ApplicationTestModule(application))
                 .build()
@@ -34,7 +34,7 @@ class TestComponentRule(val context: Context) : TestRule {
         return object : Statement() {
             @Throws(Throwable::class)
             override fun evaluate() {
-                val application = MvpStarterApplication.get(context)
+                val application = FreedompopChecker.get(context)
                 application.component = testComponent
                 base.evaluate()
             }

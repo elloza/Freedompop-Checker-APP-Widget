@@ -1,5 +1,5 @@
-package com.lozasolutions.fredompop.data.model
+package com.lozasolutions.fredompop.data.remote.model
 
 data class UsageResponse(val baseBandwidth: Long, val viralBoost: Long, val percentUsed: Float, val overageUsed: Long,
                          val planLimitUsed: Long, val balanceRemaining: Long, val upgradable: Boolean,val offerBonusEarned: Long,
-                         val startTime: Long, val endTime: Long)
+                         val totalLimit: Long, val startTime: Long, val endTime: Long)

@@ -2,7 +2,6 @@ package com.lozasolutions.fredompop
 
 import com.lozasolutions.fredompop.common.TestComponentRule
 import com.lozasolutions.fredompop.common.TestDataFactory
-import com.lozasolutions.fredompop.data.model.Pokemon
 import com.lozasolutions.fredompop.features.main.LoginActivity
 import com.lozasolutions.fredompop.util.ErrorTestUtil
 import android.support.test.InstrumentationRegistry

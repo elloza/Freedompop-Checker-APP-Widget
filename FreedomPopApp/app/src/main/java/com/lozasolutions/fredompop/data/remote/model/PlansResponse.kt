@@ -1,3 +1,4 @@
-package com.lozasolutions.fredompop.data.model
+package com.lozasolutions.fredompop.data.remote.model
 
-data class PlansResponse(val id: String, val name: String, val sprites: Sprites, val stats: List<Statistic>)
+//TODO IMPLEMENT
+data class PlansResponse(val id: String)

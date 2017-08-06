@@ -1,9 +1,10 @@
 package com.lozasolutions.fredompop.data.remote.retrofit
 
 import com.lozasolutions.fredompop.data.local.SessionManager
-import com.lozasolutions.fredompop.data.model.*
 import com.lozasolutions.fredompop.data.remote.FreedompopAPI
+import com.lozasolutions.fredompop.data.remote.model.*
 import io.reactivex.Single
+import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,46 +20,61 @@ constructor(private val freedompopAPIService: FreedompopAPIService, private val 
         return freedompopAPIService.login(username,password)
     }
 
+    fun checkTokenAndRefresh():Single<Boolean>{
+         return freedompopAPIService.refreshToken(sesionManager.getRefreshToken()).flatMap { t: LoginResponse -> checkUserLoggedAndSaveData(t) }
+    }
+
+    fun checkUserLoggedAndSaveData(loginResponse: LoginResponse):Single<Boolean>{
+        if(!loginResponse.access_token.isNullOrBlank()) {
+            sesionManager.saveTokenInfo(loginResponse.access_token, loginResponse.refresh_token)
+            return Single.just(true)
+        }else{
+            return Single.error(Exception("Unable to get access token"))
+        }
+    }
+
     override fun getUserUsage(): Single<UsageResponse> {
-        return freedompopAPIService.getUserUsage(sesionManager.getToken())
+        return checkTokenAndRefresh().flatMap { t -> freedompopAPIService.getUserUsage(sesionManager.getToken())}
     }
 
     override fun getUserInfo(): Single<InfoResponse> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return checkTokenAndRefresh().flatMap { t -> freedompopAPIService.getUserInfo(sesionManager.getToken())}
     }
 
     override fun getPlans(): Single<PlansResponse> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return checkTokenAndRefresh().flatMap { t -> freedompopAPIService.getPlans(sesionManager.getToken())}
     }
 
     override fun getPlan(): Single<PlanResponse> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return checkTokenAndRefresh().flatMap { t -> freedompopAPIService.getUserPlan(sesionManager.getToken())}
     }
 
     override fun getPlan(idPlan: String): Single<PlanResponse> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return checkTokenAndRefresh().flatMap { t -> freedompopAPIService.getUserPlanById(sesionManager.getToken(),idPlan)}
     }
 
     override fun getServices(): Single<ServicesResponse> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return checkTokenAndRefresh().flatMap { t -> freedompopAPIService.getServices(sesionManager.getToken())}
     }
 
     override fun getService(): Single<ServiceResponse> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return checkTokenAndRefresh().flatMap { t -> freedompopAPIService.getService(sesionManager.getToken())}
     }
 
     override fun getService(idService: String): Single<ServiceResponse> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return checkTokenAndRefresh().flatMap { t -> freedompopAPIService.getUserServiceById(sesionManager.getToken(),idService)}
     }
 
     override fun getContacts(): Single<ContactsResponse> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return checkTokenAndRefresh().flatMap { t -> freedompopAPIService.getContacts(sesionManager.getToken())}
     }
 
     override fun getFriends(): Single<FriendsResponse> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return checkTokenAndRefresh().flatMap { t -> freedompopAPIService.getFriends(sesionManager.getToken())}
     }
 
 
-
 }
+
+
+

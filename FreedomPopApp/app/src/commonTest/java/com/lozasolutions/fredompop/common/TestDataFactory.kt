@@ -1,9 +1,5 @@
 package com.lozasolutions.fredompop.common
 
-import com.lozasolutions.fredompop.data.model.NamedResource
-import com.lozasolutions.fredompop.data.model.Pokemon
-import com.lozasolutions.fredompop.data.model.Sprites
-import com.lozasolutions.fredompop.data.model.Statistic
 import java.util.*
 
 /**

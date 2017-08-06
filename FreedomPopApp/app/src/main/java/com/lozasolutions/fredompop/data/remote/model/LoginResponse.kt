@@ -1,4 +1,4 @@
-package com.lozasolutions.fredompop.data.model
+package com.lozasolutions.fredompop.data.remote.model
 
 import com.google.gson.annotations.SerializedName
 

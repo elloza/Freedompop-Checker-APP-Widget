@@ -3,30 +3,37 @@ package com.lozasolutions.fredompop.features.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.ProgressBar
 import butterknife.BindView
 import com.lozasolutions.fredompop.R
+import com.lozasolutions.fredompop.data.remote.model.UsageResponse
 import com.lozasolutions.fredompop.features.base.BaseActivity
 import com.lozasolutions.fredompop.features.common.ErrorView
-import com.lozasolutions.fredompop.features.detail.DetailActivity
+import devlight.io.library.ArcProgressStackView
+import org.joda.time.Interval
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
-class MainActivity : BaseActivity(), MainMvpView, PokemonAdapter.ClickListener, ErrorView.ErrorListener {
 
-    @Inject lateinit var mPokemonAdapter: PokemonAdapter
+
+
+class MainActivity : BaseActivity(), MainMvpView, ErrorView.ErrorListener {
+
+
+
     @Inject lateinit var mMainPresenter: MainPresenter
-
     @BindView(R.id.view_error) @JvmField var mErrorView: ErrorView? = null
     @BindView(R.id.progress) @JvmField var mProgress: ProgressBar? = null
-    @BindView(R.id.recycler_pokemon) @JvmField var mPokemonRecycler: RecyclerView? = null
-    @BindView(R.id.swipe_to_refresh) @JvmField var mSwipeRefreshLayout: SwipeRefreshLayout? = null
     @BindView(R.id.toolbar) @JvmField var mToolbar: Toolbar? = null
+    @BindView(R.id.arcProgress) @JvmField var arcProgressStackView: ArcProgressStackView? = null
+
+    val MODEL_COUNT = 2
+    val inMB = 1024*1024
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,18 +42,16 @@ class MainActivity : BaseActivity(), MainMvpView, PokemonAdapter.ClickListener, 
 
         setSupportActionBar(mToolbar)
 
-        mSwipeRefreshLayout?.setProgressBackgroundColorSchemeResource(R.color.primary)
-        mSwipeRefreshLayout?.setColorSchemeResources(R.color.white)
-        mSwipeRefreshLayout?.setOnRefreshListener { mMainPresenter.getPokemon(POKEMON_COUNT) }
+        val startColors = resources.getStringArray(R.array.devlight)
+        val endColors = resources.getStringArray(R.array.default_preview)
+        val bgColors = resources.getStringArray(R.array.polluted_waves)
 
-        mPokemonAdapter.setClickListener(this)
-        mPokemonRecycler?.layoutManager = LinearLayoutManager(this)
-        mPokemonRecycler?.adapter = mPokemonAdapter
+        // Parse colors
 
         mErrorView?.setErrorListener(this)
 
-        mMainPresenter.getPokemon(POKEMON_COUNT)
-        mMainPresenter.isTokenAvailable();
+        mMainPresenter.getUserUsage()
+
     }
 
     override val layout: Int
@@ -57,50 +62,73 @@ class MainActivity : BaseActivity(), MainMvpView, PokemonAdapter.ClickListener, 
         mMainPresenter.detachView()
     }
 
-    override fun showPokemon(pokemon: List<String>) {
-        mPokemonAdapter.setPokemon(pokemon)
-        mPokemonAdapter.notifyDataSetChanged()
+    override fun showUserUsage(userUsageResponse:UsageResponse) {
 
-        mPokemonRecycler?.visibility = View.VISIBLE
-        mSwipeRefreshLayout?.visibility = View.VISIBLE
+        val models = ArrayList<ArcProgressStackView.Model>()
+
+        val planLimitedUsedInMB = userUsageResponse.totalLimit /inMB
+        val usedInMB = userUsageResponse.planLimitUsed / inMB
+        val percentageUsed = userUsageResponse.percentUsed *100
+
+
+        val intervalBilling = Interval(userUsageResponse.startTime,userUsageResponse.endTime)
+        val totalDays = intervalBilling.toDuration().toStandardDays().days
+
+        val intervalToday = Interval(System.currentTimeMillis(),userUsageResponse.endTime)
+        val daysLeft = intervalToday.toDuration().toStandardDays().days
+        val percentage = (100f*daysLeft)/totalDays
+
+        //Percentage usage
+        var usageString = "%3d MB".format(usedInMB.toInt())
+
+        if(usedInMB >= 1000){
+            usageString = "%2.0f GB".format(usedInMB/1000f)
+        }
+
+        //Texts
+
+        models.add(ArcProgressStackView.Model(usageString,
+                percentageUsed,
+                ContextCompat.getColor(baseContext, R.color.primary_light_light),
+                ContextCompat.getColor(baseContext, R.color.primary)))
+
+        // Day left
+        val days = "%d days left".format(daysLeft)
+        models.add(ArcProgressStackView.Model(days, percentage,
+                ContextCompat.getColor(baseContext, R.color.primary_light_light),
+                ContextCompat.getColor(baseContext, R.color.primary_light)))
+
+        //texts
+
+        arcProgressStackView?.models = models
+
+
+        arcProgressStackView?.requestLayout();
+        arcProgressStackView?.postInvalidate();
+
+
     }
+
 
     override fun showProgress(show: Boolean) {
         if (show) {
-            if (mPokemonRecycler?.visibility == View.VISIBLE && mPokemonAdapter.itemCount > 0) {
-                mSwipeRefreshLayout?.isRefreshing = true
-            } else {
-                mProgress?.visibility = View.VISIBLE
-
-                mPokemonRecycler?.visibility = View.GONE
-                mSwipeRefreshLayout?.visibility = View.GONE
-            }
 
             mErrorView?.visibility = View.GONE
         } else {
-            mSwipeRefreshLayout?.isRefreshing = false
             mProgress?.visibility = View.GONE
         }
     }
 
     override fun showError(error: Throwable) {
-        mPokemonRecycler?.visibility = View.GONE
-        mSwipeRefreshLayout?.visibility = View.GONE
         mErrorView?.visibility = View.VISIBLE
         Timber.e(error, "There was an error retrieving the pokemon")
     }
 
-    override fun onPokemonClick(pokemon: String) {
-        startActivity(DetailActivity.getStartIntent(this, pokemon))
-    }
-
     override fun onReloadData() {
-        mMainPresenter.getPokemon(POKEMON_COUNT)
+        mMainPresenter.getUserUsage()
     }
 
     companion object {
-
-        private val POKEMON_COUNT = 20
 
         fun getStartIntent(context: Context): Intent {
             val intent = Intent(context, MainActivity::class.java)

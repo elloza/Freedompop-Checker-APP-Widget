@@ -1,17 +1,21 @@
 package com.lozasolutions.fredompop.features.base
 
-import com.lozasolutions.fredompop.MvpStarterApplication
-import com.lozasolutions.fredompop.injection.component.ActivityComponent
-import com.lozasolutions.fredompop.injection.component.ConfigPersistentComponent
-import com.lozasolutions.fredompop.injection.component.DaggerConfigPersistentComponent
-import com.lozasolutions.fredompop.injection.module.ActivityModule
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.util.LongSparseArray
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import butterknife.ButterKnife
+import com.lozasolutions.fredompop.FreedompopChecker
+import com.lozasolutions.fredompop.injection.component.ActivityComponent
+import com.lozasolutions.fredompop.injection.component.ConfigPersistentComponent
+import com.lozasolutions.fredompop.injection.component.DaggerConfigPersistentComponent
+import com.lozasolutions.fredompop.injection.module.ActivityModule
 import timber.log.Timber
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 import java.util.concurrent.atomic.AtomicLong
+
+
 
 /**
  * Abstract activity that every other Activity in this application must implement. It provides the
@@ -38,7 +42,7 @@ abstract class BaseActivity : AppCompatActivity() {
         if (sComponentsArray.get(mActivityId) == null) {
             Timber.i("Creating new ConfigPersistentComponent id=%d", mActivityId)
             configPersistentComponent = DaggerConfigPersistentComponent.builder()
-                    .applicationComponent(MvpStarterApplication[this].component)
+                    .applicationComponent(FreedompopChecker[this].component)
                     .build()
             sComponentsArray.put(mActivityId, configPersistentComponent)
         } else {
@@ -62,6 +66,10 @@ abstract class BaseActivity : AppCompatActivity() {
             sComponentsArray.remove(mActivityId)
         }
         super.onDestroy()
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

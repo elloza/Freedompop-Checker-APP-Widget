@@ -1,10 +1,11 @@
 package com.lozasolutions.fredompop.features.main
 
+import com.lozasolutions.fredompop.data.remote.model.UsageResponse
 import com.lozasolutions.fredompop.features.base.MvpView
 
 interface MainMvpView : MvpView {
 
-    fun showPokemon(pokemon: List<String>)
+    fun showUserUsage(userUsageResponse: UsageResponse)
 
     fun showProgress(show: Boolean)
 

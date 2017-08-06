@@ -1,10 +1,5 @@
 package com.lozasolutions.fredompop.features.base
 
-import com.lozasolutions.fredompop.MvpStarterApplication
-import com.lozasolutions.fredompop.injection.component.ConfigPersistentComponent
-import com.lozasolutions.fredompop.injection.component.DaggerConfigPersistentComponent
-import com.lozasolutions.fredompop.injection.component.FragmentComponent
-import com.lozasolutions.fredompop.injection.module.FragmentModule
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.util.LongSparseArray
@@ -12,6 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import butterknife.ButterKnife
+import com.lozasolutions.fredompop.FreedompopChecker
+import com.lozasolutions.fredompop.injection.component.ConfigPersistentComponent
+import com.lozasolutions.fredompop.injection.component.DaggerConfigPersistentComponent
+import com.lozasolutions.fredompop.injection.component.FragmentComponent
+import com.lozasolutions.fredompop.injection.module.FragmentModule
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicLong
 
@@ -35,7 +35,7 @@ abstract class BaseFragment : Fragment() {
         if (sComponentsArray.get(mFragmentId) == null) {
             Timber.i("Creating new ConfigPersistentComponent id=%d", mFragmentId)
             configPersistentComponent = DaggerConfigPersistentComponent.builder()
-                    .applicationComponent(MvpStarterApplication[activity].component)
+                    .applicationComponent(FreedompopChecker[activity].component)
                     .build()
             sComponentsArray.put(mFragmentId, configPersistentComponent)
         } else {
@@ -53,6 +53,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     abstract val layout: Int
+
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)

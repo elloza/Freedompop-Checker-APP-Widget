@@ -2,6 +2,7 @@ package com.lozasolutions.fredompop.injection.module
 
 import android.app.Application
 import android.content.Context
+import com.lozasolutions.fredompop.data.local.AlertManager
 import com.lozasolutions.fredompop.data.local.PreferencesHelper
 import com.lozasolutions.fredompop.data.local.SessionManager
 import com.lozasolutions.fredompop.data.remote.FreedompopAPI
@@ -37,8 +38,21 @@ class ApplicationModule(private val mApplication: Application) {
 
     @Provides
     @Singleton
-    internal fun sessionManager(@ApplicationContext context:Context): SessionManager {
+    internal fun providePreferencesHelper(@ApplicationContext context:Context): PreferencesHelper {
         return PreferencesHelper(context)
+    }
+
+
+    @Provides
+    @Singleton
+    internal fun provideSessionManager( preferencesHelper: PreferencesHelper): SessionManager {
+        return preferencesHelper
+    }
+
+    @Provides
+    @Singleton
+    internal fun provideAlertManager( preferencesHelper: PreferencesHelper): AlertManager {
+        return preferencesHelper
     }
 
     @Provides

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primary">#28a9ea</color>
-    <color name="primary_dark">#3356a0</color>
+    <color name="primary_dark">#1283bc</color>
+    <color name="primary_light">#a4dbf6</color>
+    <color name="primary_light_light">#e2f3fc</color>
+
     <!--<color name="primary_light">#FFCDD2</color>-->
     <color name="accent">#28a9ea</color>
     <color name="grey_freedompop">#484949</color>
@@ -10,4 +13,9 @@
     <!--<color name="icons">@color/white</color>-->
     <color name="white">#FFFFFF</color>
     <!--<color name="divider">#B6B6B6</color>-->
+
+    <string-array name="colors_progress">
+        <item>@color/primary_dark</item>
+        <item>@color/primary_light_light</item>
+    </string-array>
 </resources>

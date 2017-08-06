@@ -14,9 +14,8 @@ import com.github.florent37.viewanimator.ViewAnimator
 import com.lozasolutions.fredompop.R
 import com.lozasolutions.fredompop.features.base.BaseActivity
 import com.lozasolutions.fredompop.features.main.MainActivity
+import java.util.regex.Pattern
 import javax.inject.Inject
-
-
 
 
 class LoginActivity : BaseActivity(), LoginMvpView {
@@ -32,17 +31,13 @@ class LoginActivity : BaseActivity(), LoginMvpView {
     @BindView(R.id.mainLayout) @JvmField var mainLayout: ConstraintLayout? = null
     @BindView(R.id.progress) @JvmField var progress: ProgressBar? = null
 
-
-
-
-
+    val VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent().inject(this)
 
         loginPresenter.attachView(this)
-
 
         ViewAnimator
                 .animate(logoFreedompop).fadeIn().duration(1000)
@@ -68,7 +63,6 @@ class LoginActivity : BaseActivity(), LoginMvpView {
 
         if (validateData(username = usernameText, password = passwordText))
             loginPresenter.login(usernameText, passwordText)
-        Toast.makeText(applicationContext, "Loggin...", Toast.LENGTH_LONG).show();
     }
 
 
@@ -99,27 +93,31 @@ class LoginActivity : BaseActivity(), LoginMvpView {
     }
 
     fun isValidUsername(username: String): Boolean {
-        return !username.isBlank()
+        return !username.isBlank() && validate(username)
     }
 
     override fun showProgress(show: Boolean) {
 
-        if(show){
+        if (show) {
             progress?.visibility = View.VISIBLE
-        }else{
-            progress?.visibility =View.INVISIBLE
+        } else {
+            progress?.visibility = View.INVISIBLE
         }
-        Toast.makeText(applicationContext, "Progress", Toast.LENGTH_LONG).show()
+    }
+
+    fun validate(emailStr: String): Boolean {
+        val matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr)
+        return matcher.find()
     }
 
     override fun showError(error: Throwable) {
 
-        val snackbar = Snackbar.make(findViewById(android.R.id.content), "", Snackbar.LENGTH_LONG)
-                .setAction("Retry") {
+        val snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_login), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.retry), {
                     val usernameText = username?.text.toString()
                     val passwordText = password?.text.toString()
                     loginPresenter.login(usernameText, passwordText)
-                }
+                })
 
         snackbar.show()
     }

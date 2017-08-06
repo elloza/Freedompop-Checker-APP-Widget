@@ -1,6 +1,5 @@
-package com.lozasolutions.fredompop.data.model
+package com.lozasolutions.fredompop.data.remote.model
 
-import com.google.gson.annotations.SerializedName
-
-data class InfoResponse(val id: String, val name: String, val sprites: Sprites, val stats: List<Statistic>)
+//TODO IMPLEMENT
+data class InfoResponse(val id: String)
 

@@ -8,7 +8,27 @@ import javax.inject.Inject
 
 class PreferencesHelper
 @Inject
-constructor(@ApplicationContext context: Context) : SessionManager{
+constructor(@ApplicationContext context: Context) : SessionManager, AlertManager{
+    override fun saveAlert(alertIntervalInMilliseconds: Long, amountAlertInMB: Int) {
+        mPref.edit().putLong(ALERT_INTERVAL, alertIntervalInMilliseconds).apply()
+        mPref.edit().putInt(ALERT_MB,amountAlertInMB).apply()
+    }
+
+    override fun getAlertIntervalInMillisecond(): Long {
+        return mPref.getLong(ALERT_INTERVAL,0)
+    }
+
+    override fun getAmountAlertInMB(): Int {
+        return mPref.getInt(ALERT_MB,0)
+    }
+
+    override fun setActiveAlert(state: Boolean) {
+        return mPref.edit().putBoolean(ALERT_ACTIVE,state).apply()
+    }
+
+    override fun isAlertActive(): Boolean {
+        return mPref.getBoolean(ALERT_ACTIVE,false)
+    }
 
     override fun saveTokenInfo(token: String, refreshToken: String) {
         mPref.edit().putString(TOKEN,token).apply()
@@ -27,6 +47,7 @@ constructor(@ApplicationContext context: Context) : SessionManager{
         return mPref.getString(REFRESH_TOKEN,"")
     }
 
+
     private val mPref: SharedPreferences
 
     init {
@@ -41,6 +62,9 @@ constructor(@ApplicationContext context: Context) : SessionManager{
         val PREF_FILE_NAME = "mvpstarter_pref_file"
         val TOKEN = "token"
         val REFRESH_TOKEN = "refresh_token"
+        val ALERT_INTERVAL = "alert_interval"
+        val ALERT_ACTIVE = "alert_active"
+        val ALERT_MB = "alert_mb"
     }
 
 }

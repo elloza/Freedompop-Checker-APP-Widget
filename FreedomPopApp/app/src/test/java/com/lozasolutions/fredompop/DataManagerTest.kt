@@ -1,7 +1,6 @@
 package com.lozasolutions.fredompop
 
 import com.lozasolutions.fredompop.common.TestDataFactory
-import com.lozasolutions.fredompop.data.model.PokemonListResponse
 import com.lozasolutions.fredompop.util.RxSchedulersOverrideRule
 import io.reactivex.Single
 import org.junit.Before
