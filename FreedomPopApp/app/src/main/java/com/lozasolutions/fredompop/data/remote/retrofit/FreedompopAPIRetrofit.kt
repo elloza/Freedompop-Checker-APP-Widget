@@ -3,7 +3,10 @@ package com.lozasolutions.fredompop.data.remote.retrofit
 import com.lozasolutions.fredompop.data.local.SessionManager
 import com.lozasolutions.fredompop.data.remote.FreedompopAPI
 import com.lozasolutions.fredompop.data.remote.model.*
+import com.lozasolutions.fredompop.data.remote.model.errors.ErrorUtils
 import io.reactivex.Single
+import io.reactivex.SingleSource
+import retrofit2.HttpException
 import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,7 +24,24 @@ constructor(private val freedompopAPIService: FreedompopAPIService, private val 
     }
 
     fun checkTokenAndRefresh():Single<Boolean>{
-         return freedompopAPIService.refreshToken(sesionManager.getRefreshToken()).flatMap { t: LoginResponse -> checkUserLoggedAndSaveData(t) }
+
+        if(sesionManager.isTokenAvailable()){
+            return freedompopAPIService.refreshToken(sesionManager.getRefreshToken()).flatMap { t: LoginResponse -> checkUserLoggedAndSaveData(t) }
+        }else{
+            return Single.error(InvalidAuthException("Invalid Auth", Throwable()))
+        }
+    }
+
+    fun checkError(throwable: Throwable):SingleSource<LoginResponse>{
+
+        if(throwable is HttpException){
+            val error = ErrorUtils.parseError((throwable as HttpException).response())
+            if(error.error.equals("invalid_grant"))
+                return Single.error(InvalidAuthException("Invalid Auth",throwable))
+        }
+
+        return Single.error(UnknowErrorException("Unknown Error",throwable))
+
     }
 
     fun checkUserLoggedAndSaveData(loginResponse: LoginResponse):Single<Boolean>{

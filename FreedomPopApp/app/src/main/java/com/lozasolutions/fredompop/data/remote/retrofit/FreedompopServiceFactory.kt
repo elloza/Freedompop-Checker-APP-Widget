@@ -5,6 +5,7 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.lozasolutions.fredompop.BuildConfig
+import com.lozasolutions.fredompop.data.local.InfoManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -18,21 +19,21 @@ import timber.log.Timber
  */
 object FreedompopServiceFactory {
 
-    fun makeFreedompopService(): FreedompopAPIService {
-        return makeFreedompopService(makeGson())
+    fun makeFreedompopService(infoManager: InfoManager): FreedompopAPIService {
+        return makeFreedompopService(makeGson(),infoManager)
     }
 
-    private fun makeFreedompopService(gson: Gson): FreedompopAPIService {
+    private fun makeFreedompopService(gson: Gson,infoManager: InfoManager): FreedompopAPIService {
         val retrofit = Retrofit.Builder()
                 .baseUrl(BuildConfig.FREEDOMPOP_API_URL)
-                .client(makeOkHttpClient())
+                .client(makeOkHttpClient(infoManager))
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
         return retrofit.create(FreedompopAPIService::class.java)
     }
 
-    private fun makeOkHttpClient(): OkHttpClient {
+    private fun makeOkHttpClient(infoManager:InfoManager): OkHttpClient {
 
         val httpClientBuilder = OkHttpClient.Builder()
 
@@ -46,7 +47,7 @@ object FreedompopServiceFactory {
             val loggingInterceptor = HttpLoggingInterceptor { message -> Timber.d(message) }
             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
             httpClientBuilder.addInterceptor(loggingInterceptor)
-            httpClientBuilder.addInterceptor(FreedomPopTokenInterceptor(username, password))
+            httpClientBuilder.addInterceptor(FreedomPopTokenInterceptor(username, password,infoManager))
             httpClientBuilder.addNetworkInterceptor(StethoInterceptor())
         }
 

@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.multidex.MultiDexApplication
 import com.evernote.android.job.JobManager
 import com.facebook.stetho.Stetho
-import com.lozasolutions.fredompop.data.remote.jobs.AlertJobCreator
 import com.lozasolutions.fredompop.injection.component.ApplicationComponent
 import com.lozasolutions.fredompop.injection.component.DaggerApplicationComponent
 import com.lozasolutions.fredompop.injection.module.ApplicationModule
@@ -12,10 +11,12 @@ import com.squareup.leakcanary.LeakCanary
 import net.danlew.android.joda.JodaTimeAndroid
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
-
+import javax.inject.Inject
 
 
 class FreedompopChecker : MultiDexApplication() {
+
+    @Inject lateinit var jobManager: JobManager
 
     internal var mApplicationComponent: ApplicationComponent? = null
 
@@ -35,6 +36,10 @@ class FreedompopChecker : MultiDexApplication() {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         )
+
+        //Create job manager
+        jobManager = component.jobManager()
+
     }
 
     // Needed to replace the component with a test specific one

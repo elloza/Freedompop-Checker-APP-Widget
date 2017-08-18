@@ -5,6 +5,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 //apply plugin: 'io.fabric'
 
+
 android {
     compileSdkVersion 26
     buildToolsVersion '26.0.0'
@@ -26,8 +27,7 @@ android {
         // Major -> Millions, Minor -> Thousands, Bugfix -> Hundreds. E.g 1.3.72 == 1,003,072
         versionName '0.1.0'
 
-        buildConfigField("String", "FREEDOMPOP_API_URL",
-                "\"${FreedompopApiURL}\"")
+        buildConfigField("String", "FREEDOMPOP_API_URL", "\"${FreedompopApiURL}\"")
 
         multiDexEnabled true
     }
@@ -112,6 +112,8 @@ dependencies {
     implementation('com.github.bumptech.glide:okhttp3-integration:1.4.0') {
         exclude group: 'glide-parent'
     }
+
+    implementation 'com.google.android.gms:play-services:10.2.0'
 
     //Animations
 

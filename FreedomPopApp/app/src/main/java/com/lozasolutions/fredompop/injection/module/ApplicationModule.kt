@@ -3,6 +3,7 @@ package com.lozasolutions.fredompop.injection.module
 import android.app.Application
 import android.content.Context
 import com.lozasolutions.fredompop.data.local.AlertManager
+import com.lozasolutions.fredompop.data.local.InfoManager
 import com.lozasolutions.fredompop.data.local.PreferencesHelper
 import com.lozasolutions.fredompop.data.local.SessionManager
 import com.lozasolutions.fredompop.data.remote.FreedompopAPI
@@ -31,8 +32,8 @@ class ApplicationModule(private val mApplication: Application) {
 
     @Provides
     @Singleton
-    internal fun provideFreedompopAPIService(): FreedompopAPIService {
-        return FreedompopServiceFactory.makeFreedompopService()
+    internal fun provideFreedompopAPIService(infoManager: InfoManager): FreedompopAPIService {
+        return FreedompopServiceFactory.makeFreedompopService(infoManager)
     }
 
 
@@ -52,6 +53,12 @@ class ApplicationModule(private val mApplication: Application) {
     @Provides
     @Singleton
     internal fun provideAlertManager( preferencesHelper: PreferencesHelper): AlertManager {
+        return preferencesHelper
+    }
+
+    @Provides
+    @Singleton
+    internal fun provideInfoManager( preferencesHelper: PreferencesHelper): InfoManager {
         return preferencesHelper
     }
 

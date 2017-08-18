@@ -5,8 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.widget.ProgressBar
+import android.widget.*
 import butterknife.BindView
 import com.lozasolutions.fredompop.R
 import com.lozasolutions.fredompop.data.remote.model.UsageResponse
@@ -24,16 +26,30 @@ import javax.inject.Inject
 class MainActivity : BaseActivity(), MainMvpView, ErrorView.ErrorListener {
 
 
-
     @Inject lateinit var mMainPresenter: MainPresenter
     @BindView(R.id.view_error) @JvmField var mErrorView: ErrorView? = null
-    @BindView(R.id.progress) @JvmField var mProgress: ProgressBar? = null
     @BindView(R.id.toolbar) @JvmField var mToolbar: Toolbar? = null
+
+    //Progress
+    @BindView(R.id.progress) @JvmField var mProgress: ProgressBar? = null
     @BindView(R.id.arcProgress) @JvmField var arcProgressStackView: ArcProgressStackView? = null
+
+    //Info texts
+    @BindView(R.id.infoLeft) @JvmField var infoLeft: TextView? = null
+    @BindView(R.id.infoRight) @JvmField var infoRight: TextView? = null
+    @BindView(R.id.detailUsageText) @JvmField var detailUsageText: TextView? = null
+    @BindView(R.id.detailQuota) @JvmField var detailQuota: TextView? = null
+
+
+    //Alerts
+    @BindView(R.id.alertSwitch) @JvmField var alertSwitch: Switch? = null
+    @BindView(R.id.timeSpinner) @JvmField var timeSpinner: Spinner? = null
+    @BindView(R.id.alertText) @JvmField var alertText: TextView? = null
+    @BindView(R.id.alertSeekBar) @JvmField var alertSeekBar: SeekBar? = null
+
 
     val MODEL_COUNT = 2
     val inMB = 1024*1024
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +69,29 @@ class MainActivity : BaseActivity(), MainMvpView, ErrorView.ErrorListener {
         mMainPresenter.getUserUsage()
 
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.action_refresh -> {
+
+                mMainPresenter.getUserUsage()
+                return true
+            }
+            R.id.action_logout -> {
+
+                //TODO Logout
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
 
     override val layout: Int
         get() = R.layout.activity_main

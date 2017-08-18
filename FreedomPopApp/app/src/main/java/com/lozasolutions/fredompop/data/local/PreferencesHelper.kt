@@ -1,14 +1,60 @@
 package com.lozasolutions.fredompop.data.local
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Bundle
+import com.google.gson.Gson
+import com.lozasolutions.fredompop.data.remote.model.UsageResponse
+import com.lozasolutions.fredompop.features.widget.UsageWidgetProvider
 import com.lozasolutions.fredompop.injection.ApplicationContext
 import javax.inject.Inject
 
 
+
+
 class PreferencesHelper
 @Inject
-constructor(@ApplicationContext context: Context) : SessionManager, AlertManager{
+constructor(@ApplicationContext val context: Context) : SessionManager, AlertManager,InfoManager{
+
+    override fun getLastUsageAvailable(): UsageResponse {
+        val gson = Gson()
+        val json = mPref.getString(LAST_INFO, "")
+        val obj = gson.fromJson<UsageResponse>(json, UsageResponse::class.java)
+        return obj
+    }
+
+    override fun setLastUsageObtained(usageResponse: UsageResponse) {
+
+        val gson = Gson()
+        val json = gson.toJson(usageResponse)
+        mPref.edit().putString(LAST_INFO, json).apply()
+
+        updateActivityWidget(usageResponse)
+    }
+
+    fun updateActivityWidget(usageResponse: UsageResponse) {
+
+        val intent = Intent(context, UsageWidgetProvider::class.java)
+        intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+        val extras = Bundle()
+        extras.putParcelable(UsageWidgetProvider.LAST_USAGE,usageResponse)
+
+        // get widgets ids for this provider
+        val ids = AppWidgetManager.getInstance(context).getAppWidgetIds(ComponentName(context, UsageWidgetProvider::class.java!!))
+        if (ids != null && ids.isNotEmpty()) {
+            extras.putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+            intent.putExtras(extras)
+            context.sendBroadcast(intent)
+        }
+    }
+
+    override fun clearAllUserInfo() {
+        mPref.edit().clear().apply()
+    }
+
     override fun saveAlert(alertIntervalInMilliseconds: Long, amountAlertInMB: Int) {
         mPref.edit().putLong(ALERT_INTERVAL, alertIntervalInMilliseconds).apply()
         mPref.edit().putInt(ALERT_MB,amountAlertInMB).apply()
@@ -65,6 +111,7 @@ constructor(@ApplicationContext context: Context) : SessionManager, AlertManager
         val ALERT_INTERVAL = "alert_interval"
         val ALERT_ACTIVE = "alert_active"
         val ALERT_MB = "alert_mb"
+        val LAST_INFO = "last_info"
     }
 
 }

@@ -10,6 +10,8 @@
 
     <string name="error_login">Error in login</string>
     <string name="retry">Retry</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_refresh">Refresh</string>
 
     <!-- Detail Activity -->
     <!--<string name="text_pokemon_id">Id: %s</string>-->
@@ -25,4 +27,11 @@
     <string name="password">Password</string>
     <string name="log_in">Log In</string>
     <string name="freedompop_logo_description">Freedompop Logo</string>
+    <string name="notification_title">Freedompop Usage Alert</string>
+    <string formatted="false" name="notification_content">Data usage: %f/%f MB</string>
+    <string name="you_must_login">You must login</string>
+    <string name="refresh">Refresh</string>
+    <string name="left_string">%f/%f MB (%d% left)</string>
+
+
 </resources>

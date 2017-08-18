@@ -6,9 +6,11 @@ import com.lozasolutions.fredompop.data.local.SessionManager
 import com.lozasolutions.fredompop.data.remote.FreedompopAPI
 import com.lozasolutions.fredompop.data.remote.jobs.AlertJob
 import com.lozasolutions.fredompop.data.remote.model.UsageResponse
+import com.lozasolutions.fredompop.data.remote.model.errors.ErrorUtils
 import com.lozasolutions.fredompop.features.base.BasePresenter
 import com.lozasolutions.fredompop.injection.ConfigPersistent
 import com.lozasolutions.fredompop.util.rx.scheduler.SchedulerUtils
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @ConfigPersistent
@@ -32,6 +34,11 @@ constructor(private val fredompopAPI: FreedompopAPI, private val sessionManager:
                     mvpView?.showProgress(false)
                     rescheduleAlert(true)
                 }) { throwable ->
+                    if(throwable is HttpException) {
+                        val error = ErrorUtils.parseError((throwable as HttpException).response())
+                    }else{
+
+                    }
                     mvpView?.showProgress(false)
                     mvpView?.showError(throwable)
                 }
@@ -42,7 +49,7 @@ constructor(private val fredompopAPI: FreedompopAPI, private val sessionManager:
 
         if(active){
             jobManager.cancelAllForTag(AlertJob.TAG)
-            jobManager.schedule(AlertJob.buildJobRequest(2000))
+            jobManager.schedule(AlertJob.buildJobRequest(10000))
 
         }else{
             jobManager.cancelAllForTag(AlertJob.TAG)
