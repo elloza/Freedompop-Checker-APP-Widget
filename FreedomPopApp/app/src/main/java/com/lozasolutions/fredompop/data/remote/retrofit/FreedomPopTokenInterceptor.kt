@@ -41,7 +41,8 @@ class FreedomPopTokenInterceptor(user: String, password: String, val infoManager
                 val error = ErrorUtils.parseErrorFromString(responseBodyString)
                 //TODO If invalid authentication send event that must be received in every activity
                 if (error.error == "invalid_grant") {
-                    infoManager.clearAllUserInfo()
+                    //infoManager.clearAllUserInfo()
+
                 }
 
             } catch (e: Exception) {

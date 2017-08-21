@@ -28,10 +28,10 @@
     <string name="log_in">Log In</string>
     <string name="freedompop_logo_description">Freedompop Logo</string>
     <string name="notification_title">Freedompop Usage Alert</string>
-    <string formatted="false" name="notification_content">Data usage: %f/%f MB</string>
+    <string formatted="false" name="notification_content">Data usage: %d/%d MB</string>
     <string name="you_must_login">You must login</string>
     <string name="refresh">Refresh</string>
-    <string name="left_string">%f/%f MB (%d% left)</string>
+    <string formatted="false" name="left_string">%d/%d MB (%d%% left)</string>
 
 
 </resources>

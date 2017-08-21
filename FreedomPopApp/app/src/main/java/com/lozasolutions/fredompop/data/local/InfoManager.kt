@@ -11,6 +11,10 @@ interface InfoManager {
 
     fun setLastUsageObtained(usageResponse: UsageResponse)
 
+    fun notifyWidget(usageResponse: UsageResponse)
+
+    fun clearInfoWidget()
+
     fun clearAllUserInfo()
 
 }

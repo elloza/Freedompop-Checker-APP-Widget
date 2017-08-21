@@ -31,7 +31,7 @@ class AlertJob(val api: FreedompopAPI, val sessionManager: SessionManager, val a
     private val NOTIFICATION_ID = 42
 
 
-    fun doWork():Job.Result{
+    fun doWork(): Job.Result {
 
         //DO WORK
         try {
@@ -48,18 +48,20 @@ class AlertJob(val api: FreedompopAPI, val sessionManager: SessionManager, val a
                     // TODO
 
                     val inMB = 1024 * 1024
-                    //val usedInMB = usageResponse.planLimitUsed / inMB
-                    //val planLimitedUsedInMB = usageResponse.totalLimit /inMB
-
-                    val usedInMB = 700
-                    val planLimitedUsedInMB = 700
+                    val usedInMB = usageResponse.planLimitUsed / inMB
+                    val planLimitedUsedInMB = usageResponse.totalLimit /inMB
 
                     val left = planLimitedUsedInMB - usedInMB
                     //val alertAmount = alertManager.getAmountAlertInMB()
                     val alertAmount = 100
 
                     if (left <= alertAmount) {
-                        sendNotification(context.getString(R.string.notification_title), context.getString(R.string.notification_content))
+
+                        val content = java.lang.String.format(context.getString(R.string.notification_content),
+                                usedInMB, planLimitedUsedInMB)
+
+
+                        sendNotification(context.getString(R.string.notification_title), content)
                     }
 
                     //Update current data in shared preferences
@@ -76,8 +78,8 @@ class AlertJob(val api: FreedompopAPI, val sessionManager: SessionManager, val a
 
             val errorResponse = ErrorUtils.parseError(e.response())
 
-                if(errorResponse.error == "invalid_grant")
-                    return Job.Result.SUCCESS
+            if (errorResponse.error == "invalid_grant")
+                return Job.Result.SUCCESS
 
             Timber.e("RESCHEDULE")
             e.printStackTrace()
@@ -150,8 +152,6 @@ class AlertJob(val api: FreedompopAPI, val sessionManager: SessionManager, val a
         manager?.notify(NOTIFICATION_ID, notification)
 
     }
-
-
 
 
     override fun onReschedule(newJobId: Int) {

@@ -14,6 +14,7 @@ import com.lozasolutions.fredompop.R
 import com.lozasolutions.fredompop.data.remote.model.UsageResponse
 import com.lozasolutions.fredompop.features.base.BaseActivity
 import com.lozasolutions.fredompop.features.common.ErrorView
+import com.lozasolutions.fredompop.features.login.LoginActivity
 import devlight.io.library.ArcProgressStackView
 import org.joda.time.Interval
 import timber.log.Timber
@@ -39,7 +40,6 @@ class MainActivity : BaseActivity(), MainMvpView, ErrorView.ErrorListener {
     @BindView(R.id.infoRight) @JvmField var infoRight: TextView? = null
     @BindView(R.id.detailUsageText) @JvmField var detailUsageText: TextView? = null
     @BindView(R.id.detailQuota) @JvmField var detailQuota: TextView? = null
-
 
     //Alerts
     @BindView(R.id.alertSwitch) @JvmField var alertSwitch: Switch? = null
@@ -84,8 +84,9 @@ class MainActivity : BaseActivity(), MainMvpView, ErrorView.ErrorListener {
                 return true
             }
             R.id.action_logout -> {
-
-                //TODO Logout
+                mMainPresenter.clearUserInfo()
+                startActivity(LoginActivity.getStartIntent(this))
+                finish()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -125,7 +126,6 @@ class MainActivity : BaseActivity(), MainMvpView, ErrorView.ErrorListener {
         }
 
         //Texts
-
         models.add(ArcProgressStackView.Model(usageString,
                 percentageUsed,
                 ContextCompat.getColor(baseContext, R.color.primary_light_light),
@@ -138,10 +138,7 @@ class MainActivity : BaseActivity(), MainMvpView, ErrorView.ErrorListener {
                 ContextCompat.getColor(baseContext, R.color.primary_light)))
 
         //texts
-
         arcProgressStackView?.models = models
-
-
         arcProgressStackView?.requestLayout();
         arcProgressStackView?.postInvalidate();
 

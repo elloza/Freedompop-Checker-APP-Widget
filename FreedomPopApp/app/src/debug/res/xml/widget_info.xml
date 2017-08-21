@@ -5,7 +5,7 @@
     android:minHeight="100dp"
     android:updatePeriodMillis="0"
     android:initialLayout="@layout/widget"
-    android:previewImage="@mipmap/ic_launcher"
+    android:previewImage="@drawable/preview_widget"
     android:resizeMode="none"
     android:widgetCategory="home_screen">
 </appwidget-provider>

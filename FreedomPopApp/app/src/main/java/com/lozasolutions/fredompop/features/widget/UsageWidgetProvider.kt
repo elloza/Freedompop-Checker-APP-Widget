@@ -22,8 +22,8 @@ class UsageWidgetProvider : AppWidgetProvider() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        lastUsageIngo = intent.getParcelableExtra<UsageResponse>(LAST_USAGE)
-
+        if(intent.hasExtra(LAST_USAGE))
+            lastUsageIngo = intent.getParcelableExtra<UsageResponse>(LAST_USAGE)
         super.onReceive(context, intent)
     }
 
@@ -49,8 +49,21 @@ class UsageWidgetProvider : AppWidgetProvider() {
 
             lastUsageIngo = FreedompopChecker.get(context).component.infoManager().getLastUsageAvailable()
 
-            val percentageUse = lastUsageIngo?.percentUsed?.toInt()
-            remoteViews.setProgressBar(R.id.progressUsage,100, (percentageUse as Int),false)
+            val inMB = 1024*1024
+            val percentageLeft = 100.minus(lastUsageIngo?.percentUsed?.toInt()?: 0)
+            val usedInMB = lastUsageIngo?.planLimitUsed?.toInt()?.div(inMB)
+            val totalInMB = lastUsageIngo?.totalLimit?.toInt()?.div(inMB)
+
+            val content = java.lang.String.format(context.getString(R.string.left_string),
+                    usedInMB, totalInMB, percentageLeft)
+
+            remoteViews.setTextViewText(R.id.textUsage,content)
+            remoteViews.setProgressBar(R.id.progressUsage,100, percentageLeft ,false)
+
+            // Create an Intent to launch LoginActivity
+            val intent = Intent(context, SplashActivity::class.java)
+            val loginPendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+            remoteViews.setOnClickPendingIntent(R.id.refreshButton, loginPendingIntent)
 
         }
 
